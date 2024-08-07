@@ -233,7 +233,7 @@ impl Thread {
         if let Some(f) = taskNameSet.get() {
             const VX_TASK_NAME_LEN: usize = 10;
 
-            let name = truncate_cstr::<{ VX_TASK_NAME_LEN }>(name);
+            let mut name = truncate_cstr::<{ VX_TASK_NAME_LEN }>(name);
             let status = unsafe { f(libc::taskIdSelf(), name.as_mut_ptr()) };
             debug_assert_eq!(status, libc::OK);
         }
