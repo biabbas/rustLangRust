@@ -235,7 +235,7 @@ impl Thread {
 
             let name = truncate_cstr::<{ VX_TASK_NAME_LEN }>(name);
             let status = unsafe { f(libc::taskIdSelf(), name.as_mut_ptr()) };
-            debug_assert_eq!(res, libc::OK);
+            debug_assert_eq!(status, libc::OK);
         }
     }
 
@@ -491,7 +491,9 @@ pub fn available_parallelism() -> io::Result<NonZero<usize>> {
 
             // always fetches a valid bitmask
             let set = unsafe { vxCpuEnabledGet() };
-            Ok(NonZero::new_unchecked(set.count_ones() as usize))
+            Ok(unsafe{
+                NonZero::new_unchecked(set.count_ones() as usize)
+            })
         } else {
             // FIXME: implement on Redox, l4re
             Err(io::const_io_error!(io::ErrorKind::Unsupported, "Getting the number of hardware threads is not supported on the target platform"))
