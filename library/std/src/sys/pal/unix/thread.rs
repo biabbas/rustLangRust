@@ -237,6 +237,7 @@ impl Thread {
             let status = unsafe { f(libc::taskIdSelf(), name.as_mut_ptr()) };
             debug_assert_eq!(status, libc::OK);
         }
+       println!("Setname successful for vx task");
     }
 
     #[cfg(any(
